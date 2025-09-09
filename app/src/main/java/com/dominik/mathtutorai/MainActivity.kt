@@ -71,6 +71,7 @@ class MainActivity : ComponentActivity() {
                     composable("editProfile") {
                         EditProfileScreen(
                             profileManager = profileManager,
+                            navController = navController,
                             onProfileUpdated = {
                                 val active = profileManager.getActiveProfile()
                                 navController.navigate("home/${active?.name ?: "Użytkowniku"}") {

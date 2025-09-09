@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.dominik.mathtutorai.model.Profile
 import com.dominik.mathtutorai.profile.ProfileManager
 
@@ -12,6 +14,7 @@ import com.dominik.mathtutorai.profile.ProfileManager
 @Composable
 fun EditProfileScreen(
     profileManager: ProfileManager,
+    navController: NavController,
     onProfileUpdated: () -> Unit
 ) {
     val activeProfile = profileManager.getActiveProfile()
@@ -59,6 +62,22 @@ fun EditProfileScreen(
             }
         ) {
             Text("Zapisz zmiany")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                if (activeProfile != null) {
+                    profileManager.deleteProfile(activeProfile)
+                    navController.navigate("selectProfile") {
+                        popUpTo("editProfile") { inclusive = true }
+                    }
+                }
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+        ) {
+            Text("Usuń profil", color = Color.White)
         }
     }
 }
