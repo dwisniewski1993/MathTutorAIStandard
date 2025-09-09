@@ -16,4 +16,8 @@ interface ProfileDao {
 
     @Delete
     suspend fun delete(profile: ProfileEntity)
+
+    @Update
+    suspend fun update(profile: ProfileEntity)
+
 }

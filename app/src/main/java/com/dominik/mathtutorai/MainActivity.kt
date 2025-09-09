@@ -9,6 +9,7 @@ import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.dominik.mathtutorai.profile.ProfileManager
 import com.dominik.mathtutorai.ui.screens.CreateProfileScreen
+import com.dominik.mathtutorai.ui.screens.EditProfileScreen
 import com.dominik.mathtutorai.ui.screens.HomeScreen
 import com.dominik.mathtutorai.ui.screens.ProfileSelectionScreen
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +28,6 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             var startDestination by remember { mutableStateOf<String?>(null) }
 
-            // Wczytaj profile przy starcie
             LaunchedEffect(Unit) {
                 val profiles = withContext(Dispatchers.IO) {
                     profileManager.getAllProfiles()
@@ -39,7 +39,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            // Poczekaj na ustalenie startDestination
             if (startDestination != null) {
                 NavHost(navController = navController, startDestination = startDestination!!) {
                     composable("selectProfile") {
@@ -64,6 +63,18 @@ class MainActivity : ComponentActivity() {
                                 val active = profileManager.getActiveProfile()
                                 navController.navigate("home/${active?.name ?: name}") {
                                     popUpTo("selectProfile") { inclusive = true }
+                                }
+                            }
+                        )
+                    }
+
+                    composable("editProfile") {
+                        EditProfileScreen(
+                            profileManager = profileManager,
+                            onProfileUpdated = {
+                                val active = profileManager.getActiveProfile()
+                                navController.navigate("home/${active?.name ?: "Użytkowniku"}") {
+                                    popUpTo("editProfile") { inclusive = true }
                                 }
                             }
                         )

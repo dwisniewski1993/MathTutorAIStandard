@@ -20,6 +20,11 @@ fun HomeScreen(
                 title = { Text(profileName) },
                 actions = {
                     TextButton(onClick = {
+                        navController.navigate("editProfile")
+                    }) {
+                        Text("Edytuj profil")
+                    }
+                    TextButton(onClick = {
                         navController.navigate("selectProfile") {
                             popUpTo("home/$profileName") { inclusive = true }
                         }
@@ -42,7 +47,6 @@ fun HomeScreen(
                 text = "Witaj, $profileName!",
                 style = MaterialTheme.typography.headlineMedium
             )
-            // Next elements
         }
     }
 }
