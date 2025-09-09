@@ -42,7 +42,7 @@ fun CreateProfileScreen(
         OutlinedTextField(
             value = level,
             onValueChange = { level = it },
-            label = { Text("Poziom docelowy") },
+            label = { Text("Poziom docelowy (1–10)") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -55,8 +55,12 @@ fun CreateProfileScreen(
                 val ageInt = age.toIntOrNull()
                 val levelInt = level.toIntOrNull()
 
-                if (name.isBlank() || ageInt == null || ageInt <= 0 || levelInt == null || levelInt !in 1..10) {
-                    error = "Wprowadź poprawne dane"
+                if (name.isBlank()) {
+                    error = "Imię jest wymagane"
+                } else if (ageInt == null || ageInt <= 0) {
+                    error = "Wiek musi być liczbą większą niż 0"
+                } else if (levelInt == null || levelInt !in 1..10) {
+                    error = "Poziom docelowy musi być liczbą od 1 do 10"
                 } else {
                     val profile = profileManager.createProfile(name, ageInt, levelInt)
                     onProfileCreated(profile.name)
