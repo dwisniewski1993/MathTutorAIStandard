@@ -1,35 +1,47 @@
 package com.dominik.mathtutorai.profile
 
+import android.content.Context
 import com.dominik.mathtutorai.model.Profile
-import java.util.UUID
+import com.dominik.mathtutorai.storage.ProfileRepository
+import kotlinx.coroutines.runBlocking
 
-class ProfileManager {
+class ProfileManager(context: Context) {
 
-    private val profiles = mutableListOf<Profile>()
-    private var activeProfileId: String? = null
+    private val repository = ProfileRepository(context)
+    private var activeProfile: Profile? = null
+
+    fun getAllProfiles(): List<Profile> = runBlocking {
+        repository.getAllProfiles()
+    }
+
+    fun getActiveProfile(): Profile? = activeProfile
+
+    fun switchProfile(id: String) {
+        activeProfile = runBlocking {
+            repository.getProfileById(id)
+        }
+    }
 
     fun createProfile(name: String, age: Int, targetLevel: Int): Profile {
-        val profile = Profile(
-            id = UUID.randomUUID().toString(),
-            name = name,
-            age = age,
-            targetLevel = targetLevel
-        )
-        profiles.add(profile)
-        if (activeProfileId == null) activeProfileId = profile.id
+        val profile = runBlocking {
+            repository.createProfile(name, age, targetLevel)
+        }
+        activeProfile = profile
         return profile
     }
 
-    fun getActiveProfile(): Profile? {
-        return profiles.find { it.id == activeProfileId }
+    fun saveProfile(profile: Profile) {
+        runBlocking {
+            repository.saveProfile(profile)
+        }
     }
 
-    fun switchProfile(id: String): Boolean {
-        return if (profiles.any { it.id == id }) {
-            activeProfileId = id
-            true
-        } else false
+    fun deleteProfile(profile: Profile) {
+        runBlocking {
+            repository.deleteProfile(profile)
+            if (activeProfile?.id == profile.id) {
+                activeProfile = null
+            }
+        }
     }
-
-    fun getAllProfiles(): List<Profile> = profiles.toList()
 }

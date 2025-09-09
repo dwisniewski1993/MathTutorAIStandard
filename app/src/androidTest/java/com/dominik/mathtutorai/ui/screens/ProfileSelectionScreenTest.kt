@@ -1,21 +1,23 @@
 package com.dominik.mathtutorai.ui.screens
 
+import android.content.Context
+import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createComposeRule
-import com.dominik.mathtutorai.model.Profile
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.test.core.app.ApplicationProvider
 import com.dominik.mathtutorai.profile.ProfileManager
 import org.junit.Rule
 import org.junit.Test
 
-
 class ProfileSelectionScreenTest {
 
     @get:Rule
-    val composeTestRule = createComposeRule()
+    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
     fun profileList_shouldDisplayProfiles() {
-        val manager = ProfileManager().apply {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val manager = ProfileManager(context).apply {
             createProfile("Dominik", 12, 3)
             createProfile("Ola", 10, 2)
         }
